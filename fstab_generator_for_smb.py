@@ -3,11 +3,12 @@ import csv
 import os
 import subprocess
 import sys
+import pdb
 
 def build_remote_path(ip_address, remote_folder_name) -> str:
 
     # see: https://serverfault.com/questions/1000200/unable-to-mount-cifs-share-in-fstab-with-spaces-in-share-name
-    space_replacement_char = "\040"
+    space_replacement_char = "\\040"
     
     return f"//{ip_address}/{remote_folder_name.replace(' ', space_replacement_char)}"
 
@@ -27,7 +28,7 @@ def parse_user_id(raw_user_id) -> int:
         return raw_user_id
     
     else:
-        user_id = subprocess.run(["id", "-u", raw_user_id], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        user_id = subprocess.run(f"id -u {raw_user_id}", shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
         return int(user_id)
     
 
@@ -41,7 +42,7 @@ def parse_group_id(raw_group_id) -> int:
     
     else:
         # the output of `getent` looks like: `<GROUP_NAME>:x:<GROUP_ID>:<USER>`
-        group_id = subprocess.run(["getent", "group", raw_group_id], stdout=subprocess.PIPE).stdout.decode('utf-8').split(":")[2]
+        group_id = subprocess.run(f"getent group {raw_group_id}", shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8').split(":")[2]
         return int(group_id)
 
 
@@ -95,6 +96,8 @@ if __name__ == "__main__":
 
             if not os.path.isfile(credential_file_path):
                 sys.exit("Error: credentials file doesn't exist")
+
+            #pdb.set_trace()
 
             user_id = parse_user_id(csv_file_row["user id"])
             group_id = parse_group_id(csv_file_row["group id"])
