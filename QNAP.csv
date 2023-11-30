@@ -1,0 +1,11 @@
+remote folder name,local folder path,file share type,credential file path,user id,group id,file mode,directory mode
+Bambu Labs X1 Carbon,/mnt/shares/3d_printing/bambu_labs_x1_carbon,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Call Recordings,/mnt/shares/telephony/call_recordings,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Combined Family Media,/mnt/shares/family,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Nissan-Altima,/mnt/shares/dashcam/nissan_altima,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Nissan-Frontier,/mnt/shares/dashcam/nissan_frontier,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Nissan-Versa,/mnt/shares/dashcam/nissan_versa,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+PC,/mnt/shares/gaming/pc,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+PS5,/mnt/shares/gaming/ps5,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Sony_A7RIV,/mnt/shares/photography/sony_a7riv,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
+Voicemails,/mnt/shares/telephony/voicemails,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
