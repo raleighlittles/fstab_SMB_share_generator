@@ -16,7 +16,7 @@ def build_remote_path(ip_address, remote_folder_name) -> str:
 
 def construct_local_path(local_path):
 
-    os.makedirs(local_path)
+    os.makedirs(local_path, exist_ok=True)
 
 
 def parse_user_id(raw_user_id) -> int:
