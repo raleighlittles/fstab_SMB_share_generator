@@ -9,7 +9,7 @@ def generate_credential_file(username, password, domain):
     if os.path.exists(credential_file_path):
         raise FileExistsError(f"[ERROR] The file {credential_file_path} already exists")
 
-    with open(credential_file_path, "w") as credential_file:
+    with open(credential_file_path, mode="w", encoding="utf-") as credential_file:
         credential_file.write(f"username={username}\n")
         credential_file.write(f"password={password}\n")
 

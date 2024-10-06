@@ -52,6 +52,39 @@ def parse_group_id(raw_group_id) -> int:
         return int(group_id)
 
 
+def extract_symbolic_permissions(permission_str):
+    """
+    Convert symbolic permission notation to numeric notation.
+    """
+
+    allowed_symbolic_perms_chars = ["r", "w", "x", "-"]
+
+    for ch in permission_str:
+        if ch not in allowed_symbolic_perms_chars:
+            raise ValueError(
+                f"'{permission_str}' is not a valid symbolic permission string")
+
+    perms = {
+        '---': '0',
+        '--x': '1',
+        '-w-': '2',
+        '-wx': '3',
+        'r--': '4',
+        'r-x': '5',
+        'rw-': '6',
+        'rwx': '7'
+    }
+
+    # Trim Lead If It Exists
+    if len(permission_str) == 10:
+        permission_str = permission_str[1:]
+
+    # Parse Symbolic to Numeric
+    x = (permission_str[:-6], permission_str[3:-3], permission_str[6:])
+    numeric = perms[x[0]] + perms[x[1]] + perms[x[2]]
+    return numeric
+
+
 def verify_chmod_permissions(permission_num_raw: str) -> bool:
 
     MAX_PERMISSION_NUM = 0o0777
@@ -60,6 +93,23 @@ def verify_chmod_permissions(permission_num_raw: str) -> bool:
     permission_num = int(permission_num_raw, OCTAL_BASE)
 
     return (permission_num > 0) and (permission_num <= MAX_PERMISSION_NUM)
+
+
+def parse_permissions(permission_str_raw):
+
+    if permission_str_raw.isnumeric():
+        # No conversion needed
+        if not verify_chmod_permissions(permission_str_raw):
+            raise ValueError(f"User provided permission string '{
+                             permission_str_raw}' is invalid!")
+
+        return permission_str_raw
+
+    else:
+        # User provided symbolic permissions, convert to numeric
+        octal_perms = extract_symbolic_permissions(permission_str_raw.strip())
+
+        return octal_perms
 
 
 def generate_fstab_line(remote_path, local_path, share_type, creds_file,
@@ -99,9 +149,9 @@ if __name__ == "__main__":
         for csv_file_row in csv_reader:
 
             remote_path = build_remote_path(argparse_args.remote_ip_address,
-                                            csv_file_row["remote folder name"])
+                                            csv_file_row["remote directory name"])
 
-            local_path = csv_file_row["local folder path"]
+            local_path = csv_file_row["local directory path"]
             construct_local_path(local_path)
 
             file_share_type = csv_file_row["file share type"]
@@ -110,24 +160,18 @@ if __name__ == "__main__":
 
             if not os.path.isfile(credential_file_path):
                 print(
-                    f"[ERROR] Credentials file {credential_file_path} doesn't exist"
+                    f"[ERROR] Credentials file {
+                        credential_file_path} doesn't exist"
                 )
                 sys.exit(1)
 
             user_id = parse_user_id(csv_file_row["user id"])
             group_id = parse_group_id(csv_file_row["group id"])
 
-            file_permissions = csv_file_row["file mode"]
-            if not verify_chmod_permissions(file_permissions):
-                print(f"[ERROR] Invalid file permissions: {file_permissions}")
-                sys.exit(2)
+            file_permissions = parse_permissions(csv_file_row["file mode"])
 
-            directory_permissions = csv_file_row["directory mode"]
-            if not verify_chmod_permissions(directory_permissions):
-                print(
-                    f"[ERROR] Invalid directory permissions: {directory_permissions}"
-                )
-                sys.exit(3)
+            directory_permissions = parse_permissions(
+                csv_file_row["directory mode"])
 
             fstab_file = generate_fstab_line(remote_path, local_path,
                                              file_share_type,

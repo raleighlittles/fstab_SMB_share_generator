@@ -6,22 +6,32 @@ I have a NAS with over 20 attached folders, so setting up shares manually would'
 
 By filling out a simple CSV file and creating a credentials file, you can have a formatted `/etc/fstab` generated for you.
 
-![CSV screenshot](./csv-example.png)
-
-In addition to the formatting, this script can automatically retrieve user and group IDs from the username provided, which is useful for systems with multiple users.
 
 # Setup/Usage
 
-Create the top-level directory for your shares folder; this will usually require root. Change the ownership of that directory to your current user.
 
-e.g.
+Step 1: Create the top-level directory for your shares folder and set the permissions. All of your mount points will live under here.
 
 ```bash
-sudo mkdir <MY-SHARE-FOLDER>
-sudo chown -R $USER:$USER <MY-SHARE-FOLDER>
+sudo mkdir <MY-SHARE-DIRECTORY>
+sudo chown -R $USER:$USER <MY-SHARE-DIRECTORY>
+sudo chmod 0777 -R <MY-SHARE-DIRECTORY>
 ```
 
-Then run the script:
+Step 2: Create the CSV file describing your NAS configuration. (If you use Google Sheets, you can export it as a CSV.) The CSV must have 8 columns:
+
+1) remote directory name
+2) local directory path
+3) file share type, e.g. `cifs`
+4) credential file path - path to credentials file. You can use the included credential generator script. These are the credentials that you use to login to your NAS, _not_ your Linux account credentials.
+5) user id - Can be found using the `id` command. To avoiding hardcoding, you can also provide a user's name, or you can simply use "$USER" (no quotes) and it will automatically retrieve the user ID for the current user
+6) group id - Same info as user id
+7) file mode - The permissions for the files in the remote directory. Can be supplied via the usual octal flags or via symbolic permissions, e.g. "-rw-r--r--" or "0644"
+8) directory mode - Same as file mode
+
+Step 3: Identify the IP address of your NAS. I like to use the `arp` command for this.
+
+Now, simply run the script
 
 ```
 usage: fstab_generator_for_smb.py [-h] -f INPUT_CSV_FILE -i REMOTE_IP_ADDRESS [-r REMAINING_TEXT]
@@ -45,6 +55,6 @@ sudo systemctl restart remote-fs.target
 
 You should then see a bunch of messages in the dmesg window about your mounts.
 
-# Personal
+# QNAP notes
 
-For my own servers that use QNAP, you need to add: `nounix 0 0` to the end of each line.
+QNAP users may need to add: `nounix 0 0` to the end of each line (the "remaining text" section above)
