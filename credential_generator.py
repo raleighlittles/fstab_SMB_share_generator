@@ -1,7 +1,6 @@
 import argparse
 import os
 
-
 def generate_credential_file(username, password, domain):
 
     credential_file_path = os.path.join( os.getenv("HOME"), ".smbcredentials")
@@ -15,6 +14,7 @@ def generate_credential_file(username, password, domain):
 
         if domain:
             credential_file.write(f"domain={domain}\n")
+    print(f"[DEBUG] Finished creating credential file at {credential_file_path} (Size {os.path.getsize(credential_file_path)} bytes)")
     
 
 if __name__ == "__main__":

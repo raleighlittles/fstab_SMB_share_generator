@@ -13,7 +13,7 @@ By filling out a simple CSV file and creating a credentials file, you can have a
 Step 1: Create the top-level directory for your shares folder and set the permissions. All of your mount points will live under here.
 
 ```bash
-sudo mkdir <MY-SHARE-DIRECTORY>
+sudo mkdir -v <MY-SHARE-DIRECTORY>
 sudo chown -R $USER:$USER <MY-SHARE-DIRECTORY>
 sudo chmod 0777 -R <MY-SHARE-DIRECTORY>
 ```
@@ -55,6 +55,8 @@ sudo systemctl restart remote-fs.target
 
 You should then see a bunch of messages in the dmesg window about your mounts.
 
+If this doesn't work, try rebooting, and then doing `sudo mount -a`.
+
 # QNAP notes
 
-QNAP users may need to add: `nounix 0 0` to the end of each line (the "remaining text" section above)
+QNAP users may need to add: `,nounix 0 0` to the end of each line (the "remaining text" section above)

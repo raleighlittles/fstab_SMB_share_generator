@@ -1,3 +1,0 @@
-remote directory name,local directory path,file share type,credential file path,user id,group id,file mode,directory mode
-Bambu Labs X1 Carbon,/mnt/shares/3d_printing/bambu_labs_x1_carbon,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
-Call Recordings,/mnt/shares/telephony/call_recordings,cifs,/home/raleigh/.smbcredentials,$USER,1000,0777,0777
