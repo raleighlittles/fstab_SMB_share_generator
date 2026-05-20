@@ -133,7 +133,7 @@ if __name__ == "__main__":
         "--remote-ip-address",
         type=str,
         required=True,
-        help="The IP address of the remote share. Only tested with IPv4")
+        help="The IP address (or device hostname followed by '.local')of the remote share. Only tested with IPv4")
     argparse_parser.add_argument("-r",
                                  "--remaining-text",
                                  type=str,

@@ -6,9 +6,7 @@ I have a NAS with over 20 attached folders, so setting up shares manually would'
 
 By filling out a simple CSV file and creating a credentials file, you can have a formatted `/etc/fstab` generated for you.
 
-
 # Setup/Usage
-
 
 Step 1: Create the top-level directory for your shares folder and set the permissions. All of your mount points will live under here.
 
@@ -29,12 +27,12 @@ Step 2: Create the CSV file describing your NAS configuration. (If you use Googl
 7) file mode - The permissions for the files in the remote directory. Can be supplied via the usual octal flags or via symbolic permissions, e.g. "-rw-r--r--" or "0644"
 8) directory mode - Same as file mode
 
-Step 3: Identify the IP address of your NAS. I like to use the `arp` command for this.
+Step 3: Enter your NAS' hostname, followed by the suffix ".local". This will use DNS to resolve the IP address of your NAS automatically.
 
 Now, simply run the script
 
 ```
-usage: fstab_generator_for_smb.py [-h] -f INPUT_CSV_FILE -i REMOTE_IP_ADDRESS [-r REMAINING_TEXT]
+usage: fstab_generator_for_smb.py [-h] -f INPUT_CSV_FILE -i REMOTE_IP_ADDRESS_OR_HOSTNAME [-r REMAINING_TEXT]
 
 options:
   -h, --help            show this help message and exit
